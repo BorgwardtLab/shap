@@ -110,19 +110,19 @@ def summary_legacy(shap_values, features=None, feature_names=None, max_display=N
         feature_names = np.array([labels['FEATURE'] % str(i) for i in range(num_features)])
 
     if max_display is None:
-        max_display = 20
+        max_display = 30
 
     # order features by the sum of their effect magnitudes
     feature_order = np.argsort(np.sum(np.abs(shap_values), axis=0))
     feature_order = feature_order[-min(max_display, len(feature_order)):]
 
 
-    pl.figure(figsize=(20,15))
+    pl.figure()
     fig, ax = pl.subplot_mosaic(
         """
-        011
+        0111
         """,
-        figsize=(15,10)
+        figsize=(5,15)
     )
     row_height = 0.4
 
@@ -224,7 +224,6 @@ def summary_legacy(shap_values, features=None, feature_names=None, max_display=N
             ax[i].set_yticks(y_pos)
             ax[i].set_yticklabels([feature_names[i] for i in feature_inds])
 
-    print('plotted both plots')
     for i, type_ in enumerate(['bar', 'dot']):
         i = str(i)
         ax[i].xaxis.set_ticks_position('bottom')
@@ -242,6 +241,6 @@ def summary_legacy(shap_values, features=None, feature_names=None, max_display=N
         ax[i].set_ylim(-1, len(feature_order))
 
         if type_ == "bar":
-            ax[i].set_xlabel(labels['GLOBAL_VALUE'])
+            ax[i].set_xlabel('mean(|SHAP value|)')
         else:
-            ax[i].set_xlabel(labels['VALUE'])
+            ax[i].set_xlabel('SHAP value')
